@@ -13,9 +13,6 @@ esp_data_filename = 'esp.pkl'
 data = pd.read_pickle(esp_data_filename)
 data.fillna(method='pad', inplace=True)
 data.fillna(method='bfill', inplace=True)
-#for c in data.columns:
-#    data[c].fillna(data[c].mode()[0], inplace=True)
-
 
 levels = data.columns.levels
 fields_to_choose = levels[0].values
@@ -130,4 +127,4 @@ app.css.append_css({
 })
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, host='0.0.0.0')
