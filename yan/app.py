@@ -1,61 +1,81 @@
+import pandas as pd
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import plotly.graph_objs as go
-import pandas as pd
 
-df = pd.read_csv(
-    'https://raw.githubusercontent.com/plotly/'
-    'datasets/master/gapminderDataFiveYear.csv')
+from io_helpers import sensors_explanation
+
+
+esp_data_filename = 'esp.pkl'
+data = pd.read_pickle(esp_data_filename)
+
+levels = data.columns.levels
+fields_to_choose = levels[0].values
+pumps_to_choose = levels[1].values
+sensors_to_choose = levels[2].values
 
 app = dash.Dash()
 
 app.layout = html.Div([
-    dcc.Graph(id='graph-with-slider', animate=True),
-    dcc.Slider(
-        id='year-slider',
-        min=df['year'].min(),
-        max=df['year'].max(),
-        value=df['year'].min(),
-        step=None,
-        marks={str(year): str(year) for year in df['year'].unique()}
-    )
+    html.Div([
+        html.Label('Field #'),
+        dcc.Dropdown(
+            id='field-selected',
+            options=[{'label': str(f), 'value': str(f)} for f in fields_to_choose],
+            value=str(fields_to_choose[0]))
+    ], style={'width': '49%', 'display': 'inline-block'}),
+
+    html.Div([
+        html.Label('Pump #'),
+        dcc.Dropdown(
+            id='pump-selected',
+            options=[{'label': str(p), 'value': str(p)} for p in pumps_to_choose],
+            value=str(pumps_to_choose[0]))
+    ], style={'width': '49%', 'display': 'inline-block'}),
+
+    html.Label('Sensor'),
+    dcc.RadioItems(
+        id='sensor-selected',
+        options=[{'label': sensors_explanation[s], 'value': s} for s in sensors_to_choose],
+        value=str(sensors_to_choose[0]),
+        style={'columnCount': 5}
+    ),
+
+    dcc.Graph(id='sensor-readings')
 ])
 
+
 @app.callback(
-    dash.dependencies.Output('graph-with-slider', 'figure'),
-    [dash.dependencies.Input('year-slider', 'value')])
-def update_figure(selected_year):
-    filtered_df = df[df.year == selected_year]
-    traces = []
-    for i in filtered_df.continent.unique():
-        df_by_continent = filtered_df[filtered_df['continent'] == i]
-        traces.append(go.Scatter(
-            x=df_by_continent['gdpPercap'],
-            y=df_by_continent['lifeExp'],
-            text=df_by_continent['country'],
-            mode='markers',
-            opacity=0.7,
-            marker={
-                'size': 15,
-                'line': {'width': 0.5, 'color': 'white'}
-            },
-            name=i
-        ))
+    dash.dependencies.Output('sensor-readings', 'figure'),
+    [dash.dependencies.Input('field-selected', 'value'),
+     dash.dependencies.Input('pump-selected', 'value'),
+     dash.dependencies.Input('sensor-selected', 'value')])
+def update_graph(field, pump, sensor):
+    sensor_data = data[int(field), int(pump), sensor]
+    times = sensor_data.index.values
+    time_to_plot = [(t - times[0])/60 for t in times]
+    readings = sensor_data.values
 
     return {
-        'data': traces,
+        'data': [go.Scatter(
+            x=time_to_plot,
+            y=readings,
+        )],
         'layout': go.Layout(
-            xaxis={'type': 'log', 'title': 'GDP Per Capita'},
-            yaxis={'title': 'Life Expectancy', 'range': [20, 90]},
-            margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
-            legend={'x': 0, 'y': 1},
+            xaxis={
+                'title': 'Time since start [mins]',
+                'type': 'linear'
+            },
+            yaxis={
+                'title': sensors_explanation[sensor],
+                'type': 'linear' #if yaxis_type == 'Linear' else 'log'
+            },
+            margin={'l': 80, 'b': 40, 't': 10, 'r': 0},
             hovermode='closest'
         )
     }
-
-if __name__ == '__main__':
-    app.run_server()
 
 
 app.css.append_css({
@@ -63,4 +83,4 @@ app.css.append_css({
 })
 
 if __name__ == '__main__':
-    app.run_server()
+    app.run_server(debug=True)
