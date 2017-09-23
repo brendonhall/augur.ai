@@ -16,3 +16,6 @@ __pycache__
 
 *.pid
 
+
+# PyCharm
+.idea
