@@ -1,3 +1,4 @@
+from datetime import datetime
 import pandas as pd
 
 import dash
@@ -55,7 +56,7 @@ app.layout = html.Div([
 def update_graph(field, pump, sensor):
     sensor_data = data[int(field), int(pump), sensor]
     times = sensor_data.index.values
-    time_to_plot = [(t - times[0])/60 for t in times]
+    time_to_plot = [datetime.fromtimestamp(t) for t in times] #[(t - times[0])/60 for t in times]
     readings = sensor_data.values
 
     return {
@@ -66,7 +67,7 @@ def update_graph(field, pump, sensor):
         'layout': go.Layout(
             xaxis={
                 'title': 'Time since start [mins]',
-                'type': 'linear'
+                'type': 'time'
             },
             yaxis={
                 'title': sensors_explanation[sensor],
