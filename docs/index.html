@@ -78,7 +78,7 @@
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
             <h2 class="section-heading">Electrical Submersible Pumps (ESP)</h2>
-            <p class="lead">The oil field uses several different types of artificial lift mechanisms to increase the production of a well. The ESP is a common form of artificial lift used throughtout the world. ESPs have a motor that is controlled from the surface that runs a multistage centrifugal pump. ESPs make up 20% of all artificial lift used in oil wells.</p>
+            <p class="lead">The oil field uses several different types of artificial lift mechanisms to increase the production of a well. The ESP is a common form of artificial lift used throughtout the world. ESPs have a motor which is controlled from the surface that runs a multistage centrifugal pump in the vertical section of a well. ESPs make up approximately 25% of all artificial lift used in oil wells. When an ESP fails prooduction comes to a halt costing companies millions of dollars. If failues could be predicted with enough notice then the ESP can be pulled during scheduled maintenance. This reduces the loss of production and doesn't require an extra work over rig to fix problems.</p>
           </div>
           <div class="col-lg-5 mr-auto">
             <img class="img-fluid" src="img/submersible-pump.jpg" alt="">
@@ -97,11 +97,11 @@
           <div class="col-lg-5 mr-auto order-lg-2">
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
-            <h2 class="section-heading">Features</h2>
-            <p class="lead">Reduce messy data to well behaved statistics, ready for classification.</p>
+            <h2 class="section-heading">Data Wrangling</h2>
+            <p class="lead">Our data analysis incorporates various sensor data from 470 ESPs. The raw data is exported from a data historian (OSIsoft PI) where it is kept in irregular time samples to optimize storage. We created a Python interface using Pandas, and HDF5 format to interact, resample/regularize, sort, and index it for fast and flexible access. The data is kept on an AWS data drive and can be accessed from our interactive analysis tools.</p>
           </div>
           <div class="col-lg-5 ml-auto order-lg-1">
-            <img class="img-fluid" src="img/features.png" alt="">
+            <img class="img-fluid" src="img/data_wrangle.JPG" alt="">
           </div>
         </div>
 
@@ -119,11 +119,19 @@
           <div class="col-lg-5 ml-auto">
             <hr class="section-heading-spacer">
             <div class="clearfix"></div>
-            <h2 class="section-heading">Classify</h2>
-            <p class="lead">Understand the modes that govern the system.</p>
+            <h2 class="section-heading">Feature Engineering and Pattern Recognition</h2>
+            <p class="lead">ESP time-series is characterized by bursting transient behavior, anomalies and outliers, throughout both faulting and regular operation. Augr.ai feature engineering creates robust statistics for mapping volatile non-stationary esp-timeseries onto statistically well-behaved features without censoring. Faulting behavior is identified using pattern recognition, with SigOpt model optimization API training free parameters.</p>
           </div>
           <div class="col-lg-5 mr-auto ">
-            <img class="img-fluid" src="img/classify.png" alt="">
+            <img class="img-fluid" src="img/RA_Histogram.JPG" alt="">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-7">
+            <img class="img-fluid" src="img/2_26_PINP_RA.JPG" alt="">
+          </div>
+          <div class="col-lg-5">
+            <img class="img-fluid" src="img/pass_fail.JPG" alt="">
           </div>
         </div>
 
@@ -132,6 +140,29 @@
 
     </section>
     <!-- /.content-section-a -->
+
+    <section class="content-section-b">
+
+      <div class="container">
+
+        <div class="row">
+          <div class="col-lg-5 mr-auto order-lg-2">
+            <hr class="section-heading-spacer">
+            <div class="clearfix"></div>
+            <h2 class="section-heading">Augur.ai Solution</h2>
+            <p class="lead"></p>
+          </div>
+          <div class="col-lg-5 ml-auto order-lg-1">
+            <img class="img-fluid" src="img/augur_arch.png" alt="">
+          </div>
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+    </section>
+    <!-- /.content-section-b -->
+
 
     <aside class="banner">
 
