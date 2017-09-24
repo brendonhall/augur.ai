@@ -1,3 +1,5 @@
+from h5py import File as h5File
+
 sensors_explanation = {
     'PINP': 'Pump Intake Pressure',
     'PCAS': 'Casing Pressure',
@@ -20,3 +22,20 @@ sensors_explanation = {
     'SVFD1OUT': 'Drive Frequency',
     'IMOUL': 'Motor Underload'
 }
+
+
+class H5_File:
+    def __init__(self, filename):
+        self.fp = h5File(filename, 'r', driver='core')
+
+    def data_description(self):
+        field_dict = {}
+        for field in self.fp.keys():
+            field_dict[field] = {}
+            for esp in self.fp[field].keys():
+                field_dict[field][esp] = list(self.fp[field][esp].keys())
+
+        return field_dict
+
+    def query(self, field, esp, sensor):
+         return self.fp[field][esp][sensor]
