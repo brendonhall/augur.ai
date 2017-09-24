@@ -101,19 +101,20 @@ def update_graphs(sensors):
 
     sensor_data = h5_file.query(field, pump, sensors[0]).value
     fig = tools.make_subplots(rows=len(sensors), cols=1,
-                              subplot_titles=tuple(s for s in sensors),
+                              subplot_titles=tuple(sensors_explanation[s] for s in sensors),
                               shared_xaxes=True, shared_yaxes=False,
                               vertical_spacing=0.2)
 
     for i, sensor in enumerate(sensors):
         sensor_data = h5_file.query(field, pump, sensor).value
         s_data = go.Scatter(
-            x=sensor_data[0,:],
+            x=[datetime.fromtimestamp(stmp) for stmp in sensor_data[0,:]],
             y=sensor_data[1,:],
             name=sensors_explanation[sensor],
         )
         fig.append_trace(s_data, i+1, 1)
 
+    fig['layout']['xaxis'].update(type='time')
     fig['layout'].update(height=800)
     return fig
 
